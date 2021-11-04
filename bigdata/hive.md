@@ -86,8 +86,11 @@ Source)
        <value>/user/hive/warehouse</value>
    </property>
 </configuration>
-
 ```
+2)登陆 MySQL  
+[atguigu@hadoop102 software]$ mysql -uroot -p000000  
+3)新建 Hive 元数据库
+
 
 2)登陆 MySQL 
 [andrew@hadoop101 software]$ mysql -uroot -p000000  
