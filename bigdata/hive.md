@@ -90,6 +90,6 @@ Source)
 ```
 
 2)登陆 MySQL
-[atguigu@hadoop102 software]$ mysql -uroot -p000000
+[andrew@hadoop101 software]$ mysql -uroot -p000000
 3)新建 Hive 元数据库
 
