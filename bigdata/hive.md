@@ -49,7 +49,8 @@ Source)
 
 2.4 Hive 元数据配置到 MySQL 2.4.1 拷贝驱动  
 将 MySQL 的 JDBC 驱动拷贝到 Hive 的 lib 目录下  
-2.4.2 配置 Metastore 到 MySQL 1)在$HIVE_HOME/conf 目录下新建 hive-site.xml 文件  
+2.4.2 配置 Metastore 到 MySQL   
+1)在$HIVE_HOME/conf 目录下新建 hive-site.xml 文件  
     [andrew@hadoop101 software]$ vim $HIVE_HOME/conf/hive-site.xml  
 添加如下内容  
    [andrew@hadoop101 software]$ cp /opt/software/mysql-connector-java-5.1.37.jar $HIVE_HOME/lib  
@@ -57,42 +58,128 @@ Source)
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
-<!-- jdbc 连接的 URL --> <property>
+<!-- jdbc 连接的 URL --> 
+    <property>
        <name>javax.jdo.option.ConnectionURL</name>
        <value>jdbc:mysql://hadoop101:3306/metastore?useSSL=false</value>
    </property>
-<!-- jdbc 连接的 Driver--> <property>
+<!-- jdbc 连接的 Driver--> 
+    <property>
        <name>javax.jdo.option.ConnectionDriverName</name>
        <value>com.mysql.jdbc.Driver</value>
    </property>
-<!-- jdbc 连接的 username--> <property>
+<!-- jdbc 连接的 username--> 
+    <property>
        <name>javax.jdo.option.ConnectionUserName</name>
        <value>root</value>
    </property>
-<!-- jdbc 连接的 password --> <property>
+<!-- jdbc 连接的 password --> 
+    <property>
        <name>javax.jdo.option.ConnectionPassword</name>
-<value>000000</value>
-</property>
-<!-- Hive 元数据存储版本的验证 --> <property>
-   <name>hive.metastore.schema.verification</name>
-   <value>false</value>
-</property>
-<!--元数据存储授权--> <property>
-   <name>hive.metastore.event.db.notification.api.auth</name>
-   <value>false</value>
-</property>
-<!-- Hive 默认在 HDFS 的工作目录 --> <property>
+       <value>000000</value>
+    </property>
+<!-- Hive 元数据存储版本的验证 --> 
+    <property>
+        <name>hive.metastore.schema.verification</name>
+        <value>false</value>
+    </property>
+<!--元数据存储授权--> 
+    <property>
+        <name>hive.metastore.event.db.notification.api.auth</name>
+        <value>false</value>
+    </property>
+<!-- Hive 默认在 HDFS 的工作目录 --> 
+    <property>
         <name>hive.metastore.warehouse.dir</name>
-       <value>/user/hive/warehouse</value>
+        <value>/user/hive/warehouse</value>
    </property>
 </configuration>
 ```
 2)登陆 MySQL  
-[atguigu@hadoop102 software]$ mysql -uroot -p000000  
+[andrew@hadoop102 software]$ mysql -uroot -p000000  
 3)新建 Hive 元数据库
+mysql> create database metastore chartset utf8mb4;
+mysql> quit;
+
+4) 初始化 Hive 元数据库
+schematool -initSchema -dbType mysql -verbose
+
+2.4.3 再次启动 Hive 
+
+1)启动 Hive
+hive> show databases;
+hive> show tables;
+hive> create table test (id int);
+hive> insert into test values(1);
+hive> select * from test;
 
 
-2)登陆 MySQL 
-[andrew@hadoop101 software]$ mysql -uroot -p000000  
-3)新建 Hive 元数据库  
+2.5 使用元数据服务的方式访问 Hive 
 
+1)在 hive-site.xml 文件中添加如下配置信息
+<!-- 指定存储元数据要连接的地址 -->
+```xml
+ <property>
+   <name>hive.metastore.uris</name>
+   <value>thrift://hadoop102:9083</value>
+</property>
+```
+2)启动 metastore
+ [andrew@hadoop101 hive]$ hive --service metastore 
+ 2020-04-24 16:58:08: Starting Hive Metastore Server 
+ 注意: 启动后窗口不能再操作，需打开一个新的 shell 窗口做别的操作
+ 
+ 
+3)启动 hive
+[andrew@hadoop101 hive]$ bin/hive
+
+
+2.6 使用 JDBC 方式访问 Hive
+1)在 hive-site.xml 文件中添加如下配置信息
+```xml
+ <!-- 指定 hiveserver2 连接的 host --> 
+<property>
+   <name>hive.server2.thrift.bind.host</name>
+    <value>hadoop102</value>
+</property>
+<!-- 指定 hiveserver2 连接的端口号 --> 
+<property>
+   <name>hive.server2.thrift.port</name>
+   <value>10000</value>
+</property>
+```
+
+2)启动 hiveserver2
+bin/hive --service hiveserver2
+
+
+3)启动 beeline 客户端(需要多等待一会)
+beeline -u jdbc:hive2://hadoop101:10000 -n andrew
+
+4)看到如下界面
+Connecting to jdbc:hive2://hadoop101:10000
+Connected to: Apache Hive (version 3.1.2)
+Driver: Hive JDBC (version 3.1.2)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+Beeline version 3.1.2 by Apache Hive
+0: jdbc:hive2://hadoop101:10000>
+
+
+nohup hive --service metastore 2>&1 &
+nohup hive --service hiveserver2 2>&1 &
+ 
+ 
+打印当前数据库名和表头
+```xml
+<property>
+   <name>hive.cli.print.header</name>
+   <value>true</value>
+</property>
+<property>
+   <name>hive.cli.print.current.db</name>
+   <value>true</value>
+</property>
+```
+
+查看当前设置
+hive>set;
