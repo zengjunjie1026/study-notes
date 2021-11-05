@@ -3,17 +3,17 @@
 
 首先保证 Zookeeper 集群的正常部署，并启动之:
 
-[atguigu@hadoop102 zookeeper-3.4.10]$ bin/zkServer.sh start 
-[atguigu@hadoop103 zookeeper-3.4.10]$ bin/zkServer.sh start 
-[atguigu@hadoop104 zookeeper-3.4.10]$ bin/zkServer.sh start
+[andrew@hadoop101 zookeeper-3.4.10]$ bin/zkServer.sh start 
+[andrew@hadoop101 zookeeper-3.4.10]$ bin/zkServer.sh start 
+[andrew@hadoop101 zookeeper-3.4.10]$ bin/zkServer.sh start
 
 
 ##### 2.1.2 Hadoop 正常部署 Hadoop 集群的正常部署并启动:
-[atguigu@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh 
-[atguigu@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh
+[andrew@hadoop101 hadoop-2.7.2]$ sbin/start-dfs.sh 
+[andrew@hadoop103 hadoop-2.7.2]$ sbin/start-yarn.sh
 
 ##### 2.1.3 HBase 的解压 解压 Hbase 到指定目录:
-[atguigu@hadoop102 software]$ tar -zxvf hbase-1.3.1-bin.tar.gz -C /opt/module
+[andrew@hadoop101 software]$ tar -zxvf hbase-1.3.1-bin.tar.gz -C /opt/module
 
 
 

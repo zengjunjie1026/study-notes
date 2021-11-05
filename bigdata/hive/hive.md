@@ -96,7 +96,7 @@ Source)
 </configuration>
 ```
 2)登陆 MySQL  
-[andrew@hadoop102 software]$ mysql -uroot -p000000  
+[andrew@hadoop101 software]$ mysql -uroot -p000000  
 3)新建 Hive 元数据库
 mysql> create database metastore chartset utf8mb4;
 mysql> quit;
@@ -121,7 +121,7 @@ hive> select * from test;
 ```xml
  <property>
    <name>hive.metastore.uris</name>
-   <value>thrift://hadoop102:9083</value>
+   <value>thrift://hadoop101:9083</value>
 </property>
 ```
 2)启动 metastore
@@ -140,7 +140,7 @@ hive> select * from test;
  <!-- 指定 hiveserver2 连接的 host --> 
 <property>
    <name>hive.server2.thrift.bind.host</name>
-    <value>hadoop102</value>
+    <value>hadoop101</value>
 </property>
 <!-- 指定 hiveserver2 连接的端口号 --> 
 <property>
