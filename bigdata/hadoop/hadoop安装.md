@@ -9,9 +9,9 @@ cd /opt/software/
 vim ~/.bashrc
 
 #HADOOP_HOME
-export HADOOP_HOME=/opt/module/hadoop-3.1.3 
-export PATH=$PATH:$HADOOP_HOME/bin
-export PATH=$PATH:$HADOOP_HOME/sbin 
+export HADOOP_HOME=/opt/module/hadoop-3.1.3   
+export PATH=$PATH:$HADOOP_HOME/bin  
+export PATH=$PATH:$HADOOP_HOME/sbin   
 
 source ~/.bashrc
 
