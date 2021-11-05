@@ -8,7 +8,7 @@ cd /opt/software/
 将 Hadoop 添加到环境变量
 vim ~/.bashrc
 
-#HADOOP_HOME
+#HADOOP_HOME  
 export HADOOP_HOME=/opt/module/hadoop-3.1.3   
 export PATH=$PATH:$HADOOP_HOME/bin  
 export PATH=$PATH:$HADOOP_HOME/sbin   
